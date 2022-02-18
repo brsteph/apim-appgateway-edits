@@ -446,16 +446,16 @@ The following deployment steps use the Azure portal to update an existing Azure 
         1. Your Virtual IP (VIP) addresses for the API Management service by navigating to, specifically the private one, henceforth *Private VIP*.
 
 1. Make sure you have your certificates available.  There are two certificate scenarios to consider:
-    1. Have necessary certificates for your backend, which will be configured in the Routing Rule.  There are multiple options for this:
-        1. If you are using the default domain name of the API management service, no additional certificate is needed.
-        1. If you are using a custom domain that uses a well known certificate authority, such as GoDaddy, then no additional certificate is needed.
-        1. If you are using a custom domain and a custom certificate authority that is not well known, such as a Microsoft public key infrastructure implementation, then follow the instructions to [Create backend certificates](https://docs.microsoft.com/azure/application-gateway/certificates-for-backend-authentication) to prepare your certificate in advance
-    1. Have necessary certificates for your frond end, which will be configured in the Listener.  There are two options for this:
-        1. Have the certificate stored in a PFX file that you can upload as part of deployment.
-        1. Have the certificate uploaded in to a Key Vault as a Secret, accessible by a managed identity, as described in [TLS termination with Key Vault certificates](https://docs.microsoft.com/azure/application-gateway/key-vault-certs).
+    1. *Backend certificates*, which will be configured in the Routing Rule, and used for communication between Application Gateway and the APIM endpoint.
+        1. If you're using the default domain name of the API management service, you don't need a certificate.  Application Gateway will be able to use the default certificate.
+        1. If you're using a custom domain that uses a well known certificate authority, such as GoDaddy, you to not need a certificate.  Application Gateway will be able to use the well known certificate authority.
+        1. If you're using a custom domain and a custom certificate authority that isn't well known, such as a Microsoft public key infrastructure implementation, then follow the instructions to [Create backend certificates](https://docs.microsoft.com/azure/application-gateway/certificates-for-backend-authentication) to prepare your certificate in advance
+    1. *Frontend certificates*, which will be configured in the Listener, and used for communication between the client and the Application Gateway.  You have two options:
+        1. Upload a PFX certificate to the Application Gateway as part of deployment.
+        1. Upload ta PFX certificate to a Key Vault as a Secret, accessible by a managed identity, as described in [TLS termination with Key Vault certificates](https://docs.microsoft.com/azure/application-gateway/key-vault-certs).
 
 1. Make sure you have the appropriate DNS setting enabled to direct your domain to your Application Gateway.  
-    1. Your public domain should match the front end certificate you are using.
+    1. Your public domain should match the front end certificate you're using.
     1. You should have a record for both the API gateway (henceforth *frontend gateway name*) and the portal (henceforth *frontend portal name*).
     1. Both records should point to the **Frontend public IP address** on the **Overview** page of your Application Gateway.
 
@@ -472,11 +472,11 @@ The following deployment steps use the Azure portal to update an existing Azure 
     1. Name the HTTP setting as appropriate, such as *APIM-GW-HTTPSetting*.
     1. Set the backend protocol to *HTTPS*.
     1. Under **Trusted root certificate**:
-        1. If you are using the default domain name of the API Management service, set **Use well known CA certificate** to *Yes*.
-        1. If you are using a custom domain that uses a well known certificate authority, such as GoDaddy, set **Use well known CA certificate** to *Yes*.
-        1. If you are using a custom domain and a custom certificate authority that is not well known, such as a Microsoft public key infrastructure implementation, set **Use well known CA certificate** to *No*, and then upload the certificate
-    1. Under **Host name override** select *Override with specific domain name* and place in the domain name of your API gateway - the *backend gateway name*.
-    1. Leave **Use custom probe** as *No* - this will be changed in a later step.
+        1. If you're using the default domain name of the API Management service, set **Use well known CA certificate** to *Yes*.
+        1. If you're using a custom domain that uses a well known certificate authority, such as GoDaddy, set **Use well known CA certificate** to *Yes*.
+        1. If you're using a custom domain and a custom certificate authority that isn't well known, such as a Microsoft public key infrastructure implementation, set **Use well known CA certificate** to *No*, and then upload the certificate
+    1. Under **Host name override**, select *Override with specific domain name* and place in the domain name of your API gateway - the *backend gateway name*.
+    1. Leave **Use custom probe** as *No* - this setting will be changed in a later step.
     1. Select **Save** to save the configuration.
 
 1. Configure the HTTP settings for the API Portal frontend by repeating the previous step, with the following differences:
@@ -484,23 +484,23 @@ The following deployment steps use the Azure portal to update an existing Azure 
     1. Name the HTTP setting as appropriate, such as *APIM-Portal-HTTPSetting*.
     1. Set the backend protocol to *HTTPS*.
     1. Under **Trusted root certificate**:
-        1. If you are using the default domain name of the API Management service, set **Use well known CA certificate** to *Yes*.
-        1. If you are using a custom domain that uses a well known certificate authority, such as GoDaddy, set **Use well known CA certificate** to *Yes*.
-        1. If you are using a custom domain and a custom certificate authority that is not well known, such as a Microsoft public key infrastructure implementation, set **Use well known CA certificate** to *No*, and then upload the certificate or use an existing certificate.
-    1. Under **Host name override** select *Override with specific domain name* and place in the domain name of your API gateway - the *backend portal name*.
-    1. Leave **Use custom probe** as *No* - this will be changed in a later step.
+        1. If you're using the default domain name of the API Management service, set **Use well known CA certificate** to *Yes*.
+        1. If you're using a custom domain that uses a well known certificate authority, such as GoDaddy, set **Use well known CA certificate** to *Yes*.
+        1. If you're using a custom domain and a custom certificate authority that isn't well known, such as a Microsoft public key infrastructure implementation, set **Use well known CA certificate** to *No*, and then upload the certificate or use an existing certificate.
+    1. Under **Host name override**, select *Override with specific domain name* and place in the domain name of your API gateway - the *backend portal name*.
+    1. Leave **Use custom probe** as *No* - this setting will be changed in a later step.
     1. Select **Save** to save the configuration.
 
 1. Create a listener for the API Gateway frontend:
     1. Navigate to **Listeners** and select **Add listener**.  **Add listener** page appears.
     1. Name the listener something appropriate, such as *APIM-GW-Listener*.
     1. From the **Frontend IP** dropdown list, select the existing frontend IP.
-    1. Under **Protocol** select HTTPS; this will update the **Port** text field.
-    1. If you already have a certificate installed on the application gateway, such as a wildcard cert for your public domain, select it from the **Certificate** drop down list.  Otherwise, create a new certificate:
-        1. Under **Choose a certificate** select *Create new*.
+    1. Under **Protocol** select HTTPS; this selection will update the **Port** text field.
+    1. If you already have a certificate installed on the application gateway, such as a wildcard cert for your public domain, select it from the **Certificate** drop-down list.  Otherwise, create a new certificate:
+        1. Under **Choose a certificate**, select *Create new*.
         1. If the certificate is already available in a Key Vault, select *Choose a certificate from Key Vault* and fill out the necessary information (as covered in the preparation phase)
-        1. If you are uploading the certificate directly, provide it with a cert name, select the PFX file, and provide the password.
-    1. Under *Additional settings* and **Listener type** select *Multi site*.
+        1. If you're uploading the certificate directly, provide it with a cert name, select the PFX file, and provide the password.
+    1. Under *Additional settings* and **Listener type**, select *Multi site*.
     1. Leave **Host type** as *Single*.
     1. Enter in the host name - the *frontend gateway name*
     1. Select **Add** to save the configuration.
@@ -509,9 +509,9 @@ The following deployment steps use the Azure portal to update an existing Azure 
     1. Navigate to **Listeners** and select **Add listener**.  The **Add listener** page appears.
     1. Name the listener something appropriate, such as *APIM-Portal-Listener*.
     1. From the **Frontend IP** dropdown list, select the existing frontend IP.
-    1. Under **Protocol** select HTTPS; this will update the **Port** text field.
-    1. Select the certificate you used in the previous step from the **Certificate** drop down list.
-    1. Under *Additional settings* and **Listener type** select *Multi site*.
+    1. Under **Protocol** select HTTPS; this selection will update the **Port** text field.
+    1. Select the certificate you used in the previous step from the **Certificate** drop-down list.
+    1. Under *Additional settings* and **Listener type**, select *Multi site*.
     1. Leave **Host type** as *Single*.
     1. Enter in the host name - the *frontend portal name*.
     1. Select **Add** to save the configuration.
@@ -523,11 +523,11 @@ The following deployment steps use the Azure portal to update an existing Azure 
     1. Navigate to the **Backend targets** tab.
     1. From the **Backend target** dropdown, select the backend pool you created for the API Gateway.
     1. From the **HTTP Settings** dropdown, select the HTTP settings that you made for the API Gateway.
-    1. Select **Add multiple targets to create a path-based rule**.  The **Add a routing rule* sub-page appears.
+    1. Select **Add multiple targets to create a path-based rule**.  The **Add a routing rule* page appears.
     1. In the **Path** field, add ``/external/*``.
     1. In the **Target Name** field, enter ``External``.
     1. In the **HTTP settings** drop down, select your gateway HTTP setting.
-    1. In the **Backend target** select your APIM backend target.
+    1. In the **Backend target**, select your APIM backend target.
     1. Select **Add** and then **Add* again to save the configuration.
 
 1. Create a routing rule for the API Portal frontend:
@@ -563,7 +563,6 @@ The following deployment steps use the Azure portal to update an existing Azure 
     1. Leaving the check mark for *I want to test the backend health before adding the health probe* checked, select test.
     1. Select **Test**.
     1. Once the test completes successfully, select **Add**.
-<!-- Include the External redirection element? -->
 
 ## Pricing
 
