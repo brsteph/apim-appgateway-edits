@@ -539,7 +539,7 @@ The following deployment steps use the Azure portal to update an existing Azure 
     1. From the **HTTP Settings** dropdown, select the HTTP settings that you made for the API Portal.
     1. Select **Add** to save the configuration.
 
-1. Create a health probe for the API Gateway frontend:
+1. Create a health probe for the API Gateway:
     1. Navigate to **Health probes** and select **Add**.  The **Add health probe** page appears.
     1. Name the health probe something appropriate, such as *APIM-GW-Probe*.
     1. At the **Host** field, provide the host name for the API gateway - *backend gateway name*.
@@ -551,7 +551,7 @@ The following deployment steps use the Azure portal to update an existing Azure 
     1. Select **Test**.
     1. Once the test completes successfully, select **Add**.
 
-1. Create a health probe for the API Portal frontend:
+1. Create a health probe for the API Portal:
     1. Navigate to **Health probes** and select **Add**.  The **Add health probe** page appears.
     1. Name the health probe something appropriate, such as *APIM-Portal-Probe*.
     1. At the **Host** field, provide the host name for the API gateway - *backend portal name*.
