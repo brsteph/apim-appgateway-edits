@@ -475,7 +475,7 @@ The following deployment steps use the Azure portal to update an existing Azure 
         1. If you're using the default domain name of the API Management service, set **Use well known CA certificate** to *Yes*.
         1. If you're using a custom domain that uses a well known certificate authority, such as GoDaddy, set **Use well known CA certificate** to *Yes*.
         1. If you're using a custom domain and a custom certificate authority that isn't well known, such as a Microsoft public key infrastructure implementation, set **Use well known CA certificate** to *No*, and then upload the certificate
-    1. Under **Host name override**, select *Override with specific domain name* and place in the domain name of your API gateway - the *backend gateway name*.
+    1. Under **Host name override**, if you are using a *backend gateway name* that is different from your *frontend gateway name*, select *Override with specific domain name* and place in the domain name of your API gateway - the *backend gateway name*.
     1. Leave **Use custom probe** as *No* - this setting will be changed in a later step.
     1. Select **Save** to save the configuration.
 
@@ -487,7 +487,7 @@ The following deployment steps use the Azure portal to update an existing Azure 
         1. If you're using the default domain name of the API Management service, set **Use well known CA certificate** to *Yes*.
         1. If you're using a custom domain that uses a well known certificate authority, such as GoDaddy, set **Use well known CA certificate** to *Yes*.
         1. If you're using a custom domain and a custom certificate authority that isn't well known, such as a Microsoft public key infrastructure implementation, set **Use well known CA certificate** to *No*, and then upload the certificate or use an existing certificate.
-    1. Under **Host name override**, select *Override with specific domain name* and place in the domain name of your API gateway - the *backend portal name*.
+    1. Under **Host name override**, if you are using a *backend portal name* that is different from your *frontend portal name*, select *Override with specific domain name* and place in the domain name of your API gateway - the *backend portal name*.
     1. Leave **Use custom probe** as *No* - this setting will be changed in a later step.
     1. Select **Save** to save the configuration.
 
